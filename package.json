@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "AI-driven QA bot that autonomously navigates web apps, discovers user journeys, and detects regressions",
   "type": "module",
-  "engines": {
-    "node": ">=20.0.0"
-  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsup",
@@ -26,9 +23,10 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@electric-sql/pglite": "^0.2.0",
+    "@hono/node-server": "^1.0.0",
     "chrome-remote-interface": "^0.33.0",
     "drizzle-orm": "^0.38.0",
-    "fastify": "^5.0.0",
+    "hono": "^4.0.0",
     "nanoid": "^5.0.0",
     "openai": "^4.0.0",
     "pino": "^9.0.0",
@@ -37,12 +35,15 @@
   },
   "devDependencies": {
     "@types/chrome-remote-interface": "^0.31.0",
-    "@types/node": "^20.0.0",
+    "@types/node": "^22.0.0",
     "drizzle-kit": "^0.30.0",
     "oxlint": "^1.0.0",
     "tsup": "^8.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.5.0",
     "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

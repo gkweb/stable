@@ -1,3 +1,4 @@
+import { serve } from '@hono/node-server';
 import { loadConfig } from './config/index.js';
 import { createLogger } from './shared/logger.js';
 import { createServer } from './server/index.js';
@@ -14,14 +15,19 @@ async function main() {
   logger.info('Database initialized (PGlite)');
 
   // Start HTTP server
-  const app = await createServer(logger);
-  await app.listen({ port: config.port, host: config.host });
+  const app = createServer(logger);
+  const server = serve({
+    fetch: app.fetch,
+    port: config.port,
+    hostname: config.host,
+  });
+
   logger.info({ port: config.port, host: config.host }, 'Server listening');
 
   // Graceful shutdown
   const shutdown = async () => {
     logger.info('Shutting down...');
-    await app.close();
+    server.close();
     await closeDatabase();
     process.exit(0);
   };

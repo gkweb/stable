@@ -1,50 +1,41 @@
-import Fastify from 'fastify';
+import { Hono } from 'hono';
 import { healthRoutes } from './routes/health.js';
 import { runRoutes } from './routes/runs.js';
 import { authMiddleware } from './middleware/auth.js';
 import { StableError } from '../shared/errors.js';
 import type { Logger } from '../shared/logger.js';
 
-export async function createServer(logger: Logger) {
-  const app = Fastify({
-    logger: false, // We use our own pino logger
-  });
+export function createServer(logger: Logger) {
+  const app = new Hono();
 
   // Global error handler
-  app.setErrorHandler((error, _request, reply) => {
+  app.onError((error, c) => {
     if (error instanceof StableError) {
-      return reply.status(error.statusCode).send({
-        error: error.code,
-        message: error.message,
-      });
+      return c.json({ error: error.code, message: error.message }, error.statusCode as 400);
     }
 
     // Zod validation errors
     if (error instanceof Error && error.name === 'ZodError') {
-      return reply.status(400).send({
-        error: 'VALIDATION_ERROR',
-        message: 'Invalid request',
-        details: (error as unknown as { issues: unknown }).issues,
-      });
+      return c.json(
+        {
+          error: 'VALIDATION_ERROR',
+          message: 'Invalid request',
+          details: (error as unknown as { issues: unknown }).issues,
+        },
+        400,
+      );
     }
 
     logger.error({ error }, 'Unhandled error');
-    return reply.status(500).send({
-      error: 'INTERNAL_ERROR',
-      message: 'An internal error occurred',
-    });
+    return c.json({ error: 'INTERNAL_ERROR', message: 'An internal error occurred' }, 500);
   });
 
   // Auth middleware for API routes
-  app.addHook('onRequest', async (request, reply) => {
-    if (request.url.startsWith('/api/')) {
-      await authMiddleware(request, reply);
-    }
-  });
+  app.use('/api/*', authMiddleware);
 
   // Register routes
-  await app.register(healthRoutes);
-  await app.register(runRoutes);
+  app.route('/', healthRoutes);
+  app.route('/', runRoutes);
 
   return app;
 }

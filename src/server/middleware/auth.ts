@@ -1,19 +1,21 @@
-import type { FastifyRequest, FastifyReply } from 'fastify';
+import type { MiddlewareHandler } from 'hono';
 import { getConfig } from '../../config/index.js';
 
-export async function authMiddleware(request: FastifyRequest, reply: FastifyReply) {
+export const authMiddleware: MiddlewareHandler = async (c, next) => {
   const config = getConfig();
 
   // If no API key configured, allow all requests
-  if (!config.apiKey) return;
+  if (!config.apiKey) return next();
 
-  const authHeader = request.headers.authorization;
+  const authHeader = c.req.header('authorization');
   if (!authHeader) {
-    return reply.status(401).send({ error: 'Missing Authorization header' });
+    return c.json({ error: 'Missing Authorization header' }, 401);
   }
 
   const token = authHeader.replace(/^Bearer\s+/i, '');
   if (token !== config.apiKey) {
-    return reply.status(403).send({ error: 'Invalid API key' });
+    return c.json({ error: 'Invalid API key' }, 403);
   }
-}
+
+  return next();
+};
