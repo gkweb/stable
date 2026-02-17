@@ -53,12 +53,8 @@
           "name": "journeys_run_id_runs_id_fk",
           "tableFrom": "journeys",
           "tableTo": "runs",
-          "columnsFrom": [
-            "run_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["run_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -236,12 +232,8 @@
           "name": "steps_journey_id_journeys_id_fk",
           "tableFrom": "steps",
           "tableTo": "journeys",
-          "columnsFrom": [
-            "journey_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["journey_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

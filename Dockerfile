@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 RUN corepack enable pnpm
 
@@ -14,7 +14,7 @@ COPY drizzle/ drizzle/
 RUN pnpm build
 
 # --- Production ---
-FROM node:20-slim
+FROM node:22-slim
 
 # Install Chromium
 RUN apt-get update && \

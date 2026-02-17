@@ -50,19 +50,19 @@ docker compose up --build
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start dev server with hot reload |
-| `pnpm build` | Build for production |
-| `pnpm start` | Start production server |
-| `pnpm typecheck` | Run TypeScript type checking |
-| `pnpm lint` | Run oxlint |
-| `pnpm format` | Format code with oxfmt |
-| `pnpm check` | Run all checks (typecheck + lint + format) |
-| `pnpm test` | Run tests in watch mode |
-| `pnpm test:run` | Run tests once |
-| `pnpm db:generate` | Generate migration from schema changes |
-| `pnpm db:migrate` | Apply pending migrations |
+| Command            | Description                                |
+| ------------------ | ------------------------------------------ |
+| `pnpm dev`         | Start dev server with hot reload           |
+| `pnpm build`       | Build for production                       |
+| `pnpm start`       | Start production server                    |
+| `pnpm typecheck`   | Run TypeScript type checking               |
+| `pnpm lint`        | Run oxlint                                 |
+| `pnpm format`      | Format code with oxfmt                     |
+| `pnpm check`       | Run all checks (typecheck + lint + format) |
+| `pnpm test`        | Run tests in watch mode                    |
+| `pnpm test:run`    | Run tests once                             |
+| `pnpm db:generate` | Generate migration from schema changes     |
+| `pnpm db:migrate`  | Apply pending migrations                   |
 
 ## API
 

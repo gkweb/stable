@@ -1,7 +1,5 @@
-import type { FastifyInstance } from 'fastify';
+import { Hono } from 'hono';
 
-export async function healthRoutes(app: FastifyInstance) {
-  app.get('/health', async () => {
-    return { status: 'ok', timestamp: new Date().toISOString() };
-  });
-}
+export const healthRoutes = new Hono().get('/health', (c) => {
+  return c.json({ status: 'ok', timestamp: new Date().toISOString() });
+});

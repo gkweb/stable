@@ -15,26 +15,27 @@ The core value proposition: instead of manually writing E2E tests, Stable takes 
 **Core Loop**: Accessibility Snapshot -> LLM decides (using element refs) -> CDP executes action -> Record step -> Re-snapshot
 
 This follows the OpenClaw pattern: the browser's accessibility tree is extracted as a compact, semantic snapshot. Each interactive element gets a ref ID (`@e1`, `@e2`). The LLM reads the snapshot, decides which element to interact with by ref, and the browser executes via CDP. This is:
+
 - **90% fewer tokens** than screenshots (~280 chars vs ~8,000+ from Playwright MCP)
 - **Faster** than Playwright (CDP eliminates the Node.js middleware hop, ~100μs round-trips)
 - **More reliable** than coordinate-based clicking (refs are semantic, not pixel-dependent)
 - **Vision not required** from the LLM (any model with tool use works, not just vision models)
 
-| Layer | Technology | Rationale |
-|---|---|---|
-| Language | TypeScript (strict) | Type safety; good SDK coverage across LLM providers |
-| Runtime | Node.js 20 LTS | Stable; CDP WebSocket support built-in |
-| Browser Control | **Chrome DevTools Protocol (CDP)** direct | Direct WebSocket to Chromium; ~15-20% faster than Playwright; same approach as OpenClaw, Browser Use, Stagehand v3 |
-| Page Understanding | **Accessibility tree snapshots** | Compact semantic representation with element refs; ~90% fewer tokens than screenshots; proven by OpenClaw |
-| AI/LLM | **Provider-agnostic** (see below) | Pluggable provider interface; vision NOT required (text snapshots) |
-| HTTP API | Fastify | Fast; built-in validation; TypeScript-first |
-| Job Queue | BullMQ + Redis | Persistent jobs; retry; cron scheduling; progress tracking |
-| Storage | SQLite via `better-sqlite3` | Zero-dep for MVP; file-based; migrates to Postgres later |
-| Screenshot Diff | `pixelmatch` + `pngjs` | For regression comparison (not navigation) |
-| Container | Docker (Chromium + Node) | Lightweight; only need Chromium, not full Playwright |
-| Build | `tsup` (esbuild) | Fast TS compilation |
-| Package Manager | pnpm | Fast; disk-efficient; strict resolution |
-| Test Runner | vitest | Fast; native ESM/TS |
+| Layer              | Technology                                | Rationale                                                                                                          |
+| ------------------ | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Language           | TypeScript (strict)                       | Type safety; good SDK coverage across LLM providers                                                                |
+| Runtime            | Node.js 20 LTS                            | Stable; CDP WebSocket support built-in                                                                             |
+| Browser Control    | **Chrome DevTools Protocol (CDP)** direct | Direct WebSocket to Chromium; ~15-20% faster than Playwright; same approach as OpenClaw, Browser Use, Stagehand v3 |
+| Page Understanding | **Accessibility tree snapshots**          | Compact semantic representation with element refs; ~90% fewer tokens than screenshots; proven by OpenClaw          |
+| AI/LLM             | **Provider-agnostic** (see below)         | Pluggable provider interface; vision NOT required (text snapshots)                                                 |
+| HTTP API           | Fastify                                   | Fast; built-in validation; TypeScript-first                                                                        |
+| Job Queue          | BullMQ + Redis                            | Persistent jobs; retry; cron scheduling; progress tracking                                                         |
+| Storage            | SQLite via `better-sqlite3`               | Zero-dep for MVP; file-based; migrates to Postgres later                                                           |
+| Screenshot Diff    | `pixelmatch` + `pngjs`                    | For regression comparison (not navigation)                                                                         |
+| Container          | Docker (Chromium + Node)                  | Lightweight; only need Chromium, not full Playwright                                                               |
+| Build              | `tsup` (esbuild)                          | Fast TS compilation                                                                                                |
+| Package Manager    | pnpm                                      | Fast; disk-efficient; strict resolution                                                                            |
+| Test Runner        | vitest                                    | Fast; native ESM/TS                                                                                                |
 
 ### Accessibility Snapshot Navigation (OpenClaw-style)
 
@@ -62,6 +63,7 @@ The agent navigates using semantic snapshots from the browser's accessibility tr
 8. **Re-snapshot** (refs are invalidated on DOM changes)
 
 This means:
+
 - **Any LLM with tool use works** - no vision capability required
 - Actions are **ref-based** (semantic) not coordinate-based or selector-based
 - Token cost is minimal - a full page snapshot is often under 500 chars
@@ -70,6 +72,7 @@ This means:
 ### CDP vs Playwright
 
 We use CDP directly (via `chrome-remote-interface` or raw WebSocket) instead of Playwright because:
+
 - **Speed**: Direct WebSocket, no Node.js server middleware hop (~100μs vs ~1ms round-trips)
 - **Control**: Full access to all CDP domains (Accessibility, DOM, Input, Network, Page, Runtime)
 - **Industry trend**: OpenClaw, Browser Use, and Stagehand v3 all moved from Playwright to CDP
@@ -90,15 +93,15 @@ interface LLMProvider {
 
 interface ChatRequest {
   systemPrompt: string;
-  messages: ChatMessage[];          // Text content (snapshots); images only for optional screenshot capture
-  tools?: ToolDefinition[];         // JSON Schema based, provider-neutral
+  messages: ChatMessage[]; // Text content (snapshots); images only for optional screenshot capture
+  tools?: ToolDefinition[]; // JSON Schema based, provider-neutral
   temperature?: number;
   maxTokens?: number;
 }
 
 interface ChatResponse {
   content: string | null;
-  toolCalls: ToolCall[];            // Normalized tool calls
+  toolCalls: ToolCall[]; // Normalized tool calls
   usage: { inputTokens: number; outputTokens: number };
   stopReason: 'end' | 'tool_use' | 'max_tokens';
 }
@@ -106,15 +109,17 @@ interface ChatResponse {
 interface ToolDefinition {
   name: string;
   description: string;
-  parameters: JSONSchema;           // Standard JSON Schema - works across all providers
+  parameters: JSONSchema; // Standard JSON Schema - works across all providers
 }
 ```
 
 **Shipped providers (MVP)**:
+
 - `AnthropicProvider` - Claude models via `@anthropic-ai/sdk`
 - `OpenAIProvider` - GPT/o-series models via `openai` SDK (also covers Azure OpenAI)
 
 **Easy to add later**:
+
 - `GoogleProvider` - Gemini via `@google/generative-ai`
 - `OllamaProvider` - Local models via Ollama REST API
 - Any OpenAI-compatible API (Groq, Together, etc.) works via `OpenAIProvider` with a custom `baseURL`
@@ -243,6 +248,7 @@ This init focuses on **Phase 1: MVP Foundation** - getting a working end-to-end 
 **Provider-Agnostic LLM Layer**: The `LLMProvider` interface abstracts all LLM interaction. Tool definitions use standard JSON Schema. Swap providers via `LLM_PROVIDER` + `LLM_MODEL` env vars. Since we use text snapshots (not screenshots), **any model with tool use works** - no vision requirement. OpenAI-compatible APIs (Groq, Together, Ollama, Azure) all work through the OpenAI adapter with a custom `LLM_BASE_URL`.
 
 **Ref-Based Actions**: Tools are defined around element refs:
+
 - `click(ref)` - click element by ref
 - `fill(ref, text)` - fill a text input
 - `select(ref, value)` - select dropdown option
@@ -407,6 +413,7 @@ vitest                              # Testing
 ## Verification
 
 After implementation:
+
 1. `pnpm install` succeeds
 2. `pnpm typecheck` passes
 3. `pnpm build` produces `dist/` output
