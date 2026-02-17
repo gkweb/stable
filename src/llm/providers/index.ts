@@ -3,6 +3,7 @@ import type { Config } from '../../config/index.js';
 import { getEffectiveApiKey } from '../../config/index.js';
 import { AnthropicProvider } from './anthropic.js';
 import { OpenAIProvider } from './openai.js';
+import { GeminiProvider } from './gemini.js';
 import { LLMError } from '../../shared/errors.js';
 
 export function createProvider(config: Config): LLMProvider {
@@ -10,7 +11,7 @@ export function createProvider(config: Config): LLMProvider {
   if (!apiKey) {
     throw new LLMError(
       `No API key configured for provider "${config.llmProvider}". ` +
-        'Set LLM_API_KEY or the provider-specific key (ANTHROPIC_API_KEY / OPENAI_API_KEY).',
+        'Set LLM_API_KEY or the provider-specific key (ANTHROPIC_API_KEY / OPENAI_API_KEY / GEMINI_API_KEY).',
     );
   }
 
@@ -19,6 +20,8 @@ export function createProvider(config: Config): LLMProvider {
       return new AnthropicProvider(apiKey, config.llmBaseUrl);
     case 'openai':
       return new OpenAIProvider(apiKey, config.llmModel, config.llmBaseUrl);
+    case 'gemini':
+      return new GeminiProvider(apiKey, config.llmModel);
     default:
       throw new LLMError(`Unknown LLM provider: ${config.llmProvider}`);
   }
