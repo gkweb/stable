@@ -13,6 +13,7 @@ export function loadConfig(): Config {
     anthropicApiKey: process.env['ANTHROPIC_API_KEY'] || undefined,
     openaiApiKey: process.env['OPENAI_API_KEY'] || undefined,
     geminiApiKey: process.env['GEMINI_API_KEY'] || undefined,
+    openrouterApiKey: process.env['OPENROUTER_API_KEY'] || undefined,
     port: process.env['PORT'],
     host: process.env['HOST'],
     apiKey: process.env['API_KEY'] || undefined,
@@ -40,6 +41,7 @@ export function getEffectiveApiKey(config: Config): string | undefined {
   if (config.llmProvider === 'anthropic') return config.anthropicApiKey;
   if (config.llmProvider === 'openai') return config.openaiApiKey;
   if (config.llmProvider === 'gemini') return config.geminiApiKey;
+  if (config.llmProvider === 'openrouter') return config.openrouterApiKey;
   return undefined;
 }
 

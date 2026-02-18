@@ -16,13 +16,6 @@ export class BrowserError extends StableError {
   }
 }
 
-export class LLMError extends StableError {
-  constructor(message: string) {
-    super(message, 'LLM_ERROR');
-    this.name = 'LLMError';
-  }
-}
-
 export class AgentError extends StableError {
   constructor(message: string) {
     super(message, 'AGENT_ERROR');

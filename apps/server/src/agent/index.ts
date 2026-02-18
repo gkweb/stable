@@ -1,5 +1,5 @@
 import { launchBrowser, navigateTo } from '../browser/index.js';
-import { createProvider } from '../llm/providers/index.js';
+import { createProvider } from '../llm/factory.js';
 import { getDatabase } from '../db/index.js';
 import { runs } from '../db/schema.js';
 import { eq } from 'drizzle-orm';

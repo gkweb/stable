@@ -7,19 +7,40 @@ settings:
 importers:
 
   .:
+    devDependencies:
+      oxlint:
+        specifier: ^1.0.0
+        version: 1.48.0
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@22.19.11)
+
+  apps/server:
     dependencies:
-      '@anthropic-ai/sdk':
-        specifier: ^0.39.0
-        version: 0.39.0
       '@electric-sql/pglite':
         specifier: ^0.2.0
         version: 0.2.17
-      '@google/generative-ai':
-        specifier: ^0.24.1
-        version: 0.24.1
       '@hono/node-server':
         specifier: ^1.0.0
         version: 1.19.9(hono@4.11.9)
+      '@stable/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@stable/provider-anthropic':
+        specifier: workspace:*
+        version: link:../../packages/provider-anthropic
+      '@stable/provider-gemini':
+        specifier: workspace:*
+        version: link:../../packages/provider-gemini
+      '@stable/provider-openai':
+        specifier: workspace:*
+        version: link:../../packages/provider-openai
+      '@stable/provider-openrouter':
+        specifier: workspace:*
+        version: link:../../packages/provider-openrouter
       chrome-remote-interface:
         specifier: ^0.33.0
         version: 0.33.3
@@ -32,9 +53,6 @@ importers:
       nanoid:
         specifier: ^5.0.0
         version: 5.1.6
-      openai:
-        specifier: ^4.0.0
-        version: 4.104.0(zod@3.25.76)
       pino:
         specifier: ^9.0.0
         version: 9.14.0
@@ -54,9 +72,6 @@ importers:
       drizzle-kit:
         specifier: ^0.30.0
         version: 0.30.6
-      oxlint:
-        specifier: ^1.0.0
-        version: 1.48.0
       tsup:
         specifier: ^8.0.0
         version: 8.5.1(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
@@ -66,9 +81,64 @@ importers:
       typescript:
         specifier: ^5.5.0
         version: 5.9.3
-      vitest:
-        specifier: ^2.0.0
-        version: 2.1.9(@types/node@22.19.11)
+
+  packages/core:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/provider-anthropic:
+    dependencies:
+      '@anthropic-ai/sdk':
+        specifier: ^0.39.0
+        version: 0.39.0
+      '@stable/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/provider-gemini:
+    dependencies:
+      '@google/generative-ai':
+        specifier: ^0.24.1
+        version: 0.24.1
+      '@stable/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/provider-openai:
+    dependencies:
+      '@stable/core':
+        specifier: workspace:*
+        version: link:../core
+      openai:
+        specifier: ^4.0.0
+        version: 4.104.0(zod@3.25.76)
+    devDependencies:
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/provider-openrouter:
+    dependencies:
+      '@stable/core':
+        specifier: workspace:*
+        version: link:../core
+      openai:
+        specifier: ^4.0.0
+        version: 4.104.0(zod@3.25.76)
+    devDependencies:
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
 
 packages:
 

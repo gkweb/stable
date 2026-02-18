@@ -1,6 +1,6 @@
 import type CDP from 'chrome-remote-interface';
 import type { PageSnapshot } from '../browser/snapshot.js';
-import type { ToolCall } from '../llm/types.js';
+import type { ToolCall } from '@stable/core';
 import { clickElement, fillElement, selectElement, scrollPage } from '../browser/actions.js';
 import { navigateTo, waitForNetworkIdle } from '../browser/index.js';
 import { BrowserError } from '../shared/errors.js';

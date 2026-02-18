@@ -15,8 +15,8 @@ import type {
   ChatMessage,
   ToolCall,
   ContentPart,
-} from '../types.js';
-import { LLMError } from '../../shared/errors.js';
+} from '@stable/core';
+import { LLMError } from '@stable/core';
 
 export class GeminiProvider implements LLMProvider {
   readonly name = 'gemini';
@@ -180,10 +180,6 @@ export class GeminiProvider implements LLMProvider {
     return contents;
   }
 
-  /**
-   * Look up which tool name corresponds to a given tool call ID by searching
-   * previous assistant messages for matching tool_use parts.
-   */
   private findToolName(messages: ChatMessage[], toolCallId?: string): string {
     if (!toolCallId) return 'unknown';
     for (const m of messages) {

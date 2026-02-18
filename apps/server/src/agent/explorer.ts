@@ -1,7 +1,7 @@
 import type CDP from 'chrome-remote-interface';
-import type { LLMProvider, ChatMessage } from '../llm/types.js';
-import { explorationTools } from '../llm/tools/index.js';
-import { explorationSystemPrompt } from '../llm/prompts/exploration.js';
+import type { LLMProvider, ChatMessage } from '@stable/core';
+import { explorationTools } from '@stable/core';
+import { explorationSystemPrompt } from '@stable/core';
 import { takeSnapshot, type PageSnapshot } from '../browser/snapshot.js';
 import { captureScreenshot } from '../browser/screenshot.js';
 import { executeAction } from './action-executor.js';

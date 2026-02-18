@@ -2,13 +2,14 @@ import { z } from 'zod';
 
 export const configSchema = z.object({
   // LLM
-  llmProvider: z.enum(['anthropic', 'openai', 'gemini']).default('anthropic'),
+  llmProvider: z.enum(['anthropic', 'openai', 'gemini', 'openrouter']).default('anthropic'),
   llmModel: z.string().default('claude-sonnet-4-5-20250929'),
   llmBaseUrl: z.string().url().optional(),
   llmApiKey: z.string().optional(),
   anthropicApiKey: z.string().optional(),
   openaiApiKey: z.string().optional(),
   geminiApiKey: z.string().optional(),
+  openrouterApiKey: z.string().optional(),
 
   // Server
   port: z.coerce.number().int().min(1).max(65535).default(3000),

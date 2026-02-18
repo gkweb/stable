@@ -6,19 +6,25 @@ import type {
   ChatMessage,
   ToolCall,
   ContentPart,
-} from '../types.js';
-import { LLMError } from '../../shared/errors.js';
+} from '@stable/core';
+import { LLMError } from '@stable/core';
 
-export class OpenAIProvider implements LLMProvider {
-  readonly name = 'openai';
+const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
+
+export class OpenRouterProvider implements LLMProvider {
+  readonly name = 'openrouter';
   private client: OpenAI;
   private model: string;
 
-  constructor(apiKey: string, model: string, baseUrl?: string) {
+  constructor(apiKey: string, model: string) {
     this.model = model;
     this.client = new OpenAI({
       apiKey,
-      ...(baseUrl ? { baseURL: baseUrl } : {}),
+      baseURL: OPENROUTER_BASE_URL,
+      defaultHeaders: {
+        'HTTP-Referer': 'https://github.com/gkweb/stable',
+        'X-Title': 'Stable QA Bot',
+      },
     });
   }
 
@@ -54,7 +60,7 @@ export class OpenAIProvider implements LLMProvider {
 
       const choice = response.choices[0];
       if (!choice) {
-        throw new LLMError('No response from OpenAI');
+        throw new LLMError('No response from OpenRouter');
       }
 
       const toolCalls: ToolCall[] = (choice.message.tool_calls ?? []).map((tc) => ({
@@ -79,7 +85,9 @@ export class OpenAIProvider implements LLMProvider {
       };
     } catch (err) {
       if (err instanceof LLMError) throw err;
-      throw new LLMError(`OpenAI API error: ${err instanceof Error ? err.message : String(err)}`);
+      throw new LLMError(
+        `OpenRouter API error: ${err instanceof Error ? err.message : String(err)}`,
+      );
     }
   }
 

@@ -6,8 +6,8 @@ import type {
   ChatMessage,
   ToolCall,
   ContentPart,
-} from '../types.js';
-import { LLMError } from '../../shared/errors.js';
+} from '@stable/core';
+import { LLMError } from '@stable/core';
 
 export class AnthropicProvider implements LLMProvider {
   readonly name = 'anthropic';
