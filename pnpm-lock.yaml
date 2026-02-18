@@ -44,6 +44,9 @@ importers:
       chrome-remote-interface:
         specifier: ^0.33.0
         version: 0.33.3
+      dotenv:
+        specifier: ^17.3.1
+        version: 17.3.1
       drizzle-orm:
         specifier: ^0.38.0
         version: 0.38.4(@electric-sql/pglite@0.2.17)
@@ -1159,6 +1162,10 @@ packages:
 
   devtools-protocol@0.0.927104:
     resolution: {integrity: sha512-5jfffjSuTOv0Lz53wTNNTcCUV8rv7d82AhYcapj28bC2B5tDxEZzVb7k51cNxZP2KHw24QE+sW7ZuSeD9NfMpA==}
+
+  dotenv@17.3.1:
+    resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
+    engines: {node: '>=12'}
 
   drizzle-kit@0.30.6:
     resolution: {integrity: sha512-U4wWit0fyZuGuP7iNmRleQyK2V8wCuv57vf5l3MnG4z4fzNTjY/U13M8owyQ5RavqvqxBifWORaR3wIUzlN64g==}
@@ -2438,6 +2445,8 @@ snapshots:
   delayed-stream@1.0.0: {}
 
   devtools-protocol@0.0.927104: {}
+
+  dotenv@17.3.1: {}
 
   drizzle-kit@0.30.6:
     dependencies:

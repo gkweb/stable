@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { serve } from '@hono/node-server';
 import { loadConfig } from './config/index.js';
 import { createLogger } from './shared/logger.js';
