@@ -41,7 +41,7 @@ export const runRoutes = new Hono()
 
     // Start exploration in background (don't await)
     runExploration(id, body.targetUrl, logger).catch((err) => {
-      logger.error({ runId: id, error: err }, 'Exploration failed');
+      logger.error({ runId: id, error: { code: err?.code, message: err?.message ?? String(err) } }, 'Exploration failed');
     });
 
     return c.json(
